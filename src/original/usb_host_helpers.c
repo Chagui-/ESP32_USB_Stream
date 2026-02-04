@@ -11,7 +11,11 @@
 #include "esp_log.h"
 #include "esp_idf_version.h"
 #include "esp_attr.h"
+#if __has_include("esp_private/usb_phy.h")
 #include "esp_private/usb_phy.h"
+#elif __has_include("usb_phy.h")
+#include "usb_phy.h"
+#endif
 #include "usb_host_helpers.h"
 #include "esp_intr_alloc.h"
 

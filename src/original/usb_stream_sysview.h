@@ -6,7 +6,11 @@
 
 #pragma once
 
-#if CONFIG_APPTRACE_SV_ENABLE && (ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(5, 0, 0))
+#if __has_include("esp_idf_version.h")
+#include "esp_idf_version.h"
+#endif
+
+#if defined(CONFIG_APPTRACE_SV_ENABLE) && CONFIG_APPTRACE_SV_ENABLE && defined(ESP_IDF_VERSION) && (ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(5, 0, 0))
 #include "SEGGER_SYSVIEW.h"
 
 #define SYSVIEW_MARKER_DFT_PIPE_HANDLE_ID         10

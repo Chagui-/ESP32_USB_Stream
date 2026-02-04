@@ -75,7 +75,7 @@ static void _mic_frame_cb(mic_frame_t *frame, void *ptr)
 {
     USB_STREAM *my_instance = (USB_STREAM *)ptr;
     if (my_instance->_user_mic_frame_cb != nullptr) {
-        my_instance->_user_mic_frame_cb(frame, my_instance->_user_frame_cb_arg);
+        my_instance->_user_mic_frame_cb(frame, my_instance->_user_mic_frame_cb_arg);
     }
 }
 
@@ -216,13 +216,13 @@ void USB_STREAM::uacSpkResume(void *ctrl_value)
 // Method to mute uac spk
 void USB_STREAM::uacSpkMute(void *ctrl_value)
 {
-    CHECK_ESP_ERROR(usb_streaming_control(STREAM_UAC_MIC, CTRL_UAC_MUTE, ctrl_value), "uac spk mute fail");
+    CHECK_ESP_ERROR(usb_streaming_control(STREAM_UAC_SPK, CTRL_UAC_MUTE, ctrl_value), "uac spk mute fail");
 }
 
 // Method to adjust uac spk volume
 void USB_STREAM::uacSpkVolume(void *ctrl_value)
 {
-    CHECK_ESP_ERROR(usb_streaming_control(STREAM_UAC_MIC, CTRL_UAC_VOLUME, ctrl_value), "uac spk volume fail");
+    CHECK_ESP_ERROR(usb_streaming_control(STREAM_UAC_SPK, CTRL_UAC_VOLUME, ctrl_value), "uac spk volume fail");
 }
 
 // Method to get uvc frame size
@@ -303,7 +303,7 @@ void USB_STREAM::uacSpkGetFrameListSize(size_t *frame_size, size_t *frame_index)
         ESP_LOGE(TAG, "arguments cannot be null");
         return;
     }
-    CHECK_ESP_ERROR(uac_frame_size_list_get(STREAM_UAC_MIC, nullptr, frame_size, frame_index), "get frame list size fail");
+    CHECK_ESP_ERROR(uac_frame_size_list_get(STREAM_UAC_SPK, nullptr, frame_size, frame_index), "get frame list size fail");
 }
 
 // Method to reset uac mic frame

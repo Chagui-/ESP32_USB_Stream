@@ -22,7 +22,7 @@
 #include "esp_attr.h"
 #include "esp_log.h"
 #include "hcd.h"
-#if ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(5, 3, 0)
+#if defined(ESP_IDF_VERSION) && (ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(5, 3, 0)) && __has_include("hal/usb_dwc_ll.h")
 #include "hal/usb_dwc_ll.h"
 #endif
 #include "usb/usb_types_stack.h"
@@ -462,7 +462,7 @@ typedef struct {
     int periodic_out_mps;
 } fifo_mps_limits_t;
 
-#if ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(5, 1, 0)
+#if defined(ESP_IDF_VERSION) && (ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(5, 1, 0))
 
 #ifndef USB_DWC_FIFO_RX_LINES_DEFAULT
 #define USB_DWC_FIFO_RX_LINES_DEFAULT 104
