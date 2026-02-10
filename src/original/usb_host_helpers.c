@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+#define LOG_LOCAL_LEVEL ESP_LOG_VERBOSE
 #include <inttypes.h>
 #include <string.h>
 #include "sdkconfig.h"

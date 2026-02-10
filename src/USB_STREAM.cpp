@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-
+#define LOG_LOCAL_LEVEL ESP_LOG_VERBOSE
 #include "USB_STREAM.h"
 #include "original/include/usb_stream.h"
 #include "freertos/event_groups.h"
@@ -139,6 +139,7 @@ void USB_STREAM::uacConfiguration(uint8_t mic_ch_num, uint16_t mic_bit_resolutio
 // Method to start the USB streaming
 void USB_STREAM::start()
 {
+    ESP_LOGI(TAG, "Calling start()");
     CHECK_ESP_ERROR(usb_streaming_start(), "USB streaming start fail");
 }
 

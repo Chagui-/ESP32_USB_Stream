@@ -5,6 +5,7 @@
  */
 
 #pragma once
+#define LOG_LOCAL_LEVEL ESP_LOG_VERBOSE
 
 #include <stdio.h>
 #include <assert.h>
@@ -15,10 +16,11 @@
 #include "esp_log.h"
 #include "original/include/usb_stream.h"
 
-class USB_STREAM {
+class USB_STREAM
+{
 
 public:
-    //Public member variables for storing user-defined callback function and arguments
+    // Public member variables for storing user-defined callback function and arguments
     void *_user_mic_frame_cb_arg = NULL;
     void *_user_frame_cb_arg = NULL;
     uvc_frame_callback_t _user_frame_cb = NULL;
@@ -49,7 +51,7 @@ public:
 
     /*
      * @brief Wait for USB device connection
-    */
+     */
     void connectWait(int timeoutMs);
 
     /**
@@ -170,13 +172,13 @@ public:
     void uacMicGetFrameListSize(size_t *frame_size, size_t *frame_index);
 
     /**
-      * @brief Configuration for UAC object
-      *
-      * @param mic_ch_num microphone channel numbers
-      * @param mic_bit_resolution  microphone resolution(bits)
-      * @param mic_samples_frequency microphone frequency(Hz)
-      * @param mic_buf_size mic receive buffer size, 0 if not use
-      */
+     * @brief Configuration for UAC object
+     *
+     * @param mic_ch_num microphone channel numbers
+     * @param mic_bit_resolution  microphone resolution(bits)
+     * @param mic_samples_frequency microphone frequency(Hz)
+     * @param mic_buf_size mic receive buffer size, 0 if not use
+     */
     void uacConfiguration(uint8_t mic_ch_num, uint16_t mic_bit_resolution, uint32_t mic_samples_frequency, uint32_t mic_buf_size, uint8_t spk_ch_num, uint16_t spk_bit_resolution, uint32_t spk_samples_frequency, uint32_t spk_buf_size);
 
     /**
@@ -235,10 +237,10 @@ public:
     void uacSpkVolume(void *ctrl_value);
 
     /**
-    * @brief Get the frame size list of current connected Spk
-    *
-    * @param frame_size the frame size list
-    */
+     * @brief Get the frame size list of current connected Spk
+     *
+     * @param frame_size the frame size list
+     */
     uac_frame_size_t *uacSpkGetFrameSize(uac_frame_size_t *frame_size);
 
     /**

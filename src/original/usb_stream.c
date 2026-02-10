@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-
+#define LOG_LOCAL_LEVEL ESP_LOG_VERBOSE
 #include <stdio.h>
 #include <inttypes.h>
 #include <stdint.h>
@@ -3690,6 +3690,8 @@ esp_err_t uvc_streaming_config(const uvc_config_t *config)
 
 esp_err_t usb_streaming_start()
 {
+    ESP_LOGI(TAG, "Calling usb_streaming_start()");
+    vTaskDelay(pdMS_TO_TICKS(100));
     UVC_CHECK(s_usb_dev.event_group_hdl == NULL, "usb streaming is running", ESP_ERR_INVALID_STATE);
     s_usb_dev.event_group_hdl = xEventGroupCreate();
     UVC_CHECK(s_usb_dev.event_group_hdl  != NULL, "Create event group failed", ESP_FAIL);
@@ -3716,6 +3718,8 @@ esp_err_t usb_streaming_start()
     s_usb_dev.mps_limits = &s_mps_limits_default;
 
     if (s_usb_dev.uac_cfg.spk_samples_frequence && s_usb_dev.uac_cfg.spk_bit_resolution) {
+        ESP_LOGI(TAG, "usb_streaming_start: Configuring UAC Speaker Stream");
+        vTaskDelay(pdMS_TO_TICKS(100));
         //using samples_frequence and bit_resolution as enable condition
         s_usb_dev.uac = heap_caps_calloc(1, sizeof(_uac_device_t), MALLOC_CAP_INTERNAL);
         UVC_CHECK_GOTO(s_usb_dev.uac != NULL, "malloc failed", free_resource_);
@@ -3734,6 +3738,8 @@ esp_err_t usb_streaming_start()
         s_usb_dev.enabled[STREAM_UAC_SPK] = true;
     }
     if (s_usb_dev.uac_cfg.mic_samples_frequence && s_usb_dev.uac_cfg.mic_bit_resolution) {
+        ESP_LOGI(TAG, "usb_streaming_start: Configuring UAC Mic Stream");
+        vTaskDelay(pdMS_TO_TICKS(100));
         //using samples_frequence and bit_resolution as enable condition
         if (s_usb_dev.uac == NULL) {
             s_usb_dev.uac = heap_caps_calloc(1, sizeof(_uac_device_t), MALLOC_CAP_INTERNAL);
@@ -3754,6 +3760,8 @@ esp_err_t usb_streaming_start()
         s_usb_dev.enabled[STREAM_UAC_MIC] = true;
     }
     if (s_usb_dev.uvc_cfg.frame_width && s_usb_dev.uvc_cfg.frame_height) {
+        ESP_LOGI(TAG, "usb_streaming_start: Configuring UVC Camera Stream");
+        vTaskDelay(pdMS_TO_TICKS(100));
         //using frame_width and frame_height as enable condition
         s_usb_dev.uvc = heap_caps_calloc(1, sizeof(_uvc_device_t), MALLOC_CAP_INTERNAL);
         UVC_CHECK_GOTO(s_usb_dev.uvc != NULL, "malloc failed", free_resource_);
@@ -3773,6 +3781,8 @@ esp_err_t usb_streaming_start()
     }
     UVC_CHECK_GOTO(s_usb_dev.enabled[STREAM_UAC_MIC] == true || s_usb_dev.enabled[STREAM_UAC_SPK] == true || s_usb_dev.enabled[STREAM_UVC] == true, "uac/uvc streaming not configured", free_resource_);
 
+    ESP_LOGI(TAG, "usb_streaming_start: Creating USB Processing Task");
+    vTaskDelay(pdMS_TO_TICKS(100));
     TaskHandle_t usbh_taskh = NULL;
     xTaskCreatePinnedToCore(_usb_processing_task, USB_PROC_TASK_NAME, USB_PROC_TASK_STACK_SIZE, NULL,
                             USB_PROC_TASK_PRIORITY, &usbh_taskh, USB_PROC_TASK_CORE);
