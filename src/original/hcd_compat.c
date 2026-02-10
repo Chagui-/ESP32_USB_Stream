@@ -11,13 +11,16 @@
 
 #include "esp_err.h"
 #include "hcd.h"
+#include "esp_idf_version.h"
 
 // FIFO biasing is an optimization/tuning knob. If the core doesn't provide it,
 // fallback to a no-op returning success.
+
+#if ESP_IDF_VERSION < ESP_IDF_VERSION_VAL(5, 3, 3)
 __attribute__((weak)) esp_err_t hcd_port_set_fifo_bias(hcd_port_handle_t port_hdl, hcd_port_fifo_bias_t bias)
 {
     (void)port_hdl;
     (void)bias;
     return ESP_OK;
 }
-
+#endif

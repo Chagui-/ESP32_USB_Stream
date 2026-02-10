@@ -1,5 +1,5 @@
 /*
- * SPDX-FileCopyrightText: 2022-2024 Espressif Systems (Shanghai) CO LTD
+ * SPDX-FileCopyrightText: 2022-2025 Espressif Systems (Shanghai) CO LTD
  *
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -22,7 +22,7 @@
 #include "esp_attr.h"
 #include "esp_log.h"
 #include "hcd.h"
-#if defined(ESP_IDF_VERSION) && (ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(5, 3, 0)) && __has_include("hal/usb_dwc_ll.h")
+#if ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(5, 3, 0)
 #include "hal/usb_dwc_ll.h"
 #endif
 #include "usb/usb_types_stack.h"
@@ -462,7 +462,7 @@ typedef struct {
     int periodic_out_mps;
 } fifo_mps_limits_t;
 
-#if defined(ESP_IDF_VERSION) && (ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(5, 1, 0))
+#if ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(5, 1, 0)
 
 #ifndef USB_DWC_FIFO_RX_LINES_DEFAULT
 #define USB_DWC_FIFO_RX_LINES_DEFAULT 104
@@ -512,7 +512,9 @@ typedef struct {
     // const values after usb stream start
     bool enabled[STREAM_MAX];
     hcd_port_handle_t port_hdl;
+#if ESP_IDF_VERSION < ESP_IDF_VERSION_VAL(5, 3, 3)
     hcd_port_fifo_bias_t fifo_bias;
+#endif
     const fifo_mps_limits_t *mps_limits;
     uint16_t configuration;
     uint8_t dev_addr;
@@ -2114,6 +2116,7 @@ IRAM_ATTR static void _uvc_process_payload(_uvc_stream_handle_t *strmh, size_t r
         strmh->reassembling = 0;
     }
 
+#if CONFIG_UVC_CHECK_HEADER_EOF
     if (header_info & (1 << 1)) {
         /* The EOF bit is set, so publish the complete frame */
         if (strmh->got_bytes != 0) {
@@ -2121,6 +2124,7 @@ IRAM_ATTR static void _uvc_process_payload(_uvc_stream_handle_t *strmh, size_t r
         }
         strmh->reassembling = 0;
     }
+#endif
 }
 
 /**
@@ -3351,8 +3355,10 @@ static void _usb_processing_task(void *arg)
                 continue;
             }
             reset_retry = 3;
+#if ESP_IDF_VERSION < ESP_IDF_VERSION_VAL(5, 3, 3)
             ESP_LOGI(TAG, "Setting Port FIFO, %d", usb_dev->fifo_bias);
             ESP_ERROR_CHECK(hcd_port_set_fifo_bias(usb_dev->port_hdl, usb_dev->fifo_bias));
+#endif
             action_bits &= ~ACTION_DEVICE_CONNECT;
             action_bits |= ACTION_DEVICE_ENUM;
             usb_dev->enum_stage = ENUM_STAGE_NONE;
@@ -3704,7 +3710,9 @@ esp_err_t usb_streaming_start()
     s_usb_dev.dev_speed = USB_SPEED_FULL;
     s_usb_dev.dev_addr = USB_DEVICE_ADDR;
     s_usb_dev.configuration = USB_CONFIG_NUM;
+#if ESP_IDF_VERSION < ESP_IDF_VERSION_VAL(5, 3, 3)
     s_usb_dev.fifo_bias = HCD_PORT_FIFO_BIAS_BALANCED;
+#endif
     s_usb_dev.mps_limits = &s_mps_limits_default;
 
     if (s_usb_dev.uac_cfg.spk_samples_frequence && s_usb_dev.uac_cfg.spk_bit_resolution) {
@@ -3758,7 +3766,9 @@ esp_err_t usb_streaming_start()
         ESP_LOGD(TAG, "Camera instance created");
         s_usb_dev.enabled[STREAM_UVC] = true;
         //if enable uvc, we should set fifo bias to RX
+#if ESP_IDF_VERSION < ESP_IDF_VERSION_VAL(5, 3, 3)
         s_usb_dev.fifo_bias = HCD_PORT_FIFO_BIAS_RX;
+#endif
         s_usb_dev.mps_limits = &s_mps_limits_bias_rx;
     }
     UVC_CHECK_GOTO(s_usb_dev.enabled[STREAM_UAC_MIC] == true || s_usb_dev.enabled[STREAM_UAC_SPK] == true || s_usb_dev.enabled[STREAM_UVC] == true, "uac/uvc streaming not configured", free_resource_);

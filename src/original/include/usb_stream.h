@@ -28,7 +28,8 @@ extern "C" {
 #define FRAME_INTERVAL_FPS_10             FPS2INTERVAL(10)      /*!< 10 fps */
 #define FRAME_INTERVAL_FPS_15             FPS2INTERVAL(15)      /*!< 15 fps */
 #define FRAME_INTERVAL_FPS_20             FPS2INTERVAL(20)      /*!< 20 fps */
-#define FRAME_INTERVAL_FPS_30             FPS2INTERVAL(25)      /*!< 25 fps */
+#define FRAME_INTERVAL_FPS_25             FPS2INTERVAL(25)      /*!< 25 fps */
+#define FRAME_INTERVAL_FPS_30             FPS2INTERVAL(30)      /*!< 30 fps */
 #define FLAG_UVC_SUSPEND_AFTER_START      (1 << 0)              /*!< suspend uvc after usb_streaming_start */
 #define FLAG_UAC_SPK_SUSPEND_AFTER_START  (1 << 1)              /*!< suspend uac speaker after usb_streaming_start */
 #define FLAG_UAC_MIC_SUSPEND_AFTER_START  (1 << 2)              /*!< suspend uac microphone after usb_streaming_start */
